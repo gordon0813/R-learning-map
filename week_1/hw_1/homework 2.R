@@ -12,12 +12,21 @@ if(FALSE){
 a=0
 s1=as.character(s)
 while(a<4){
-input=readline("input:  ")
-
-vec=c()
-for (i in 1:4){
-  vec[i]=substr(input,i,i)
+while(TRUE){
+  input=readline("input:  ")
+  vec=c()
+  for (i in 1:4){
+    vec[i]=substr(input,i,i)
+  }
+  number1387=c(1:9)
+  number1387=as.character(number1387)
+  
+  if(all(comp=(vec%in%number1387))&length(unique(vec))==4){
+    break
+  }
+  print("¿é¤J¿ù»~")
 }
+
 
 a=0
 b=0
