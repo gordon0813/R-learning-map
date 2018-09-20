@@ -5,7 +5,7 @@ date: "2018年9月20日"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup}
 #先使用google
 library(rvest)
 web1='https://www.google.com.tw/search?q='
@@ -27,6 +27,7 @@ for(i in 0:long){
   }
   
 }
+print("down")
 
 ```
 
@@ -65,9 +66,8 @@ for (i in 1:(long*10)){
 }
 ```
 ```{r}
-cat(txtlist[[1]])#顯示部分文章
-print("+++++++++++++++++++++++++++++++++++++++++++++++=")
-cat(txtlist[[4]])
+cat(txtlist[[2]])#顯示任一文章
+cat(txtlist[[5]])#顯示任一文章
 ```
 
 
