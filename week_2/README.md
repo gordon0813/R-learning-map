@@ -11,6 +11,6 @@
     
     -爬蟲檔名:use_Google_get_info_from_PTT 
     
-    -   簡介:使爬蟲用google搜尋特定關鍵字Ptt文章，再將文章收錄下來並整理
+    -   簡介:使爬蟲用google搜尋特定關鍵字Ptt課程文章，再將文章收錄下來並整理，關鍵字可自由更改(不過要先轉URL)
     
     -加分檔名:ooxx
