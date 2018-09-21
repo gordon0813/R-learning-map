@@ -1,7 +1,7 @@
 #先使用google
 library(rvest)
 web1='https://www.google.com.tw/search?q='
-webname='%E8%94%A1%E7%88%BE%E6%88%90'#要搜尋的(此處為:蔡爾成)
+webname='%e7%8e%8b%e5%82%91%e8%b3%a2'#要搜尋的(此處為:蔡爾成)
 #'%E6%88%91%E7%9A%84%E8%8B%B1%E9%9B%84%E5%AD%B8%E9%99%A2'
 web2='+ptt+site:www.ptt.cc&rlz=1C1GCEA_enTW762TW762&ei=njSjW5PDMIj08gWx8Je4DA&start='
 webnum=''
