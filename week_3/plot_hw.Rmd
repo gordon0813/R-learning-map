@@ -1,0 +1,98 @@
+---
+title: "plot"
+author: "gordon"
+date: "2018年9月27日"
+output: html_document
+---
+
+```{r }
+rm(list = ls(all=TRUE))
+
+```
+
+```{r}
+library(ggplot2)
+```
+
+
+
+```{r}
+library(dplyr)
+library(lubridate)
+library(readr)
+```
+
+```{r}
+file <- read.csv("avocado.csv")
+
+```
+`
+```{r}
+timedata=file[1:300,]
+i=c(1:51)
+timedata1=filter(timedata,type=="conventional")
+mumate=mutate(timedata1,xxx=X4046/2)
+ggplot(data=timedata1,aes(x=Total.Volume,y=AveragePrice))+geom_point(aes(color=region))
+#先觀察價格和產量有無符合供需曲線
+
+```
+```{r}
+#發現不同地區的總產量差太多，使數據不好判讀
+#嘗試將產量除以該區平均
+filepv=select(file,AveragePrice,region,Total.Volume,type,year)
+filepv=filter(filepv,type=="conventional")
+filepv=filter(filepv,year=="2016")
+region_name=filepv[,"region"]
+region_name=unique(region_name)
+filepvs=filepv
+for (i in 2:11){
+  if(i==4|i==8|i==10){
+    next
+  }
+  filepvs=filter(filepv,region==region_name[i])#過濾row
+  count1=filepvs[,'Total.Volume']#dataframe轉vector
+  avg1=sum(count1)/length(count1)
+  filepvs=filepvs%>%mutate(normal=(Total.Volume/avg1))
+  if(i==2){
+    file_pv_new=filepvs
+  }else{
+    file_pv_new=rbind(file_pv_new,filepvs)
+  }
+}
+
+
+
+```
+```{r}
+ggplot(data=file_pv_new,aes(x=normal,y=AveragePrice))+geom_point(aes(color=region))
+#最後資料稍微有了供需曲線的模樣(斜直線，nomal 是正規化後的產量)
+```
+
+
+```{r}
+#接著再來為繪製產量和時間的關係
+library(dplyr)
+library(lubridate)
+filenew=file%>%mutate(date=ymd(Date))
+
+```
+
+
+```{r}
+filetime=filenew[1:255,]
+ggplot(filetime,aes(x=date,y=Total.Bags,color=region))+geom_line()
+#似乎夏天的產量都比較高
+```
+
+```{r}
+filenew2=filter(filenew,region=="BaltimoreWashington"&type=="conventional")
+
+```
+
+```{r}
+#在繪製單一地區多年產量
+#發現產量在近期大幅成長
+ggplot(filenew2,aes(x=date,y=Total.Bags))+geom_line()
+
+```
+
