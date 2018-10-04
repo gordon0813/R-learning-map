@@ -1,0 +1,135 @@
+---
+title: "cloud"
+author: "gordon"
+date: "2018年10月4日"
+output: html_document
+---
+
+```{r }
+library(rvest)
+web1='https://www.google.com.tw/search?q='
+webname='%e7%8e%8b%e5%82%91%e8%b3%a2'
+  #"%E9%AB%94%E8%82%B2%E7%94%9C"(體育甜)
+  #'%e7%8e%8b%e5%82%91%e8%b3%a2'#要搜尋的(此處為:蔡爾成)
+#'%E6%88%91%E7%9A%84%E8%8B%B1%E9%9B%84%E5%AD%B8%E9%99%A2'(王傑賢)
+web2='+ptt+site:www.ptt.cc&rlz=1C1GCEA_enTW762TW762&ei=njSjW5PDMIj08gWx8Je4DA&start='
+webnum=''
+webfinal='&sa=N&biw=1280&bih=653'
+website=c()
+long=3  # google 頁數
+for(i in 0:long){
+  webnum=as.character(i*10)
+  web=paste(web1,webname,web2,webnum,webfinal,sep="")
+  doc1 <- read_html(web)
+  block=html_nodes(doc1,".r")
+  text1=html_text(block)
+  for (j in 1:10){
+    website[j+i*10]=xml_attrs(xml_child(block[[j]], 1))[["href"]]#獲取網址
+  }
+  
+}
+print("down")
+a=website  #診裡網址
+a=strsplit(a,'&')
+
+for (i in 1:(10*long+10)){
+  a[[i]]=a[[i]][1]
+  a[[i]]=strsplit(a[[i]],'=')
+}
+for (i in 1:(10*long+10)){
+  a[[i]]=a[[i]][[1]][2]
+}
+website=a
+#a=0
+head(website)#整理完畢
+#進入PTT
+
+
+```
+
+```{r}
+txtlist=list()
+for (i in 1:(long*10)){
+  doc1=read_html(website[[i]])
+  
+  txt=html_text(doc1)
+  txt=strsplit(txt,'NTUcourse標題')#整理文章10篇
+  txtlist[i] <- txt[[1]][2]
+  txtlist[i] <- strsplit(txtlist[[i]],"\n")
+}
+
+```
+
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r }
+
+
+setwd('D:/R/R data/TextMining')
+library(NLP)
+library(tm)
+library(jiebaRD)
+library(jiebaR)
+library(RColorBrewer)
+library(wordcloud)
+
+
+docs <- Corpus(VectorSource(txtlist))
+
+toSpace <- content_transformer(function(x, pattern) {
+  return (gsub(pattern, " ", x))
+}
+)
+docs <- tm_map(docs, toSpace, "※")
+docs <- tm_map(docs, toSpace, "老師")
+docs <- tm_map(docs, toSpace, "推")
+docs <- tm_map(docs, toSpace, "◆")
+docs <- tm_map(docs, toSpace, "‧")
+docs <- tm_map(docs, toSpace, "的")
+docs <- tm_map(docs, toSpace, "我")
+docs <- tm_map(docs, toSpace, "是")
+docs <- tm_map(docs, toSpace, "會")
+docs <- tm_map(docs, toSpace, "同學")
+docs <- tm_map(docs, toSpace, "看板")
+docs <- tm_map(docs, toSpace, "作者")
+docs <- tm_map(docs, toSpace, "發信站")
+docs <- tm_map(docs, toSpace, "批踢踢實業坊")
+docs <- tm_map(docs, toSpace, "[a-zA-Z]")
+#移除標點符號 (punctuation)
+#移除數字 (digits)、空白 (white space)
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, stripWhitespace)
+#語詞詞幹化 (stemmization)
+#以英文為例
+#https://zh.wikipedia.org/wiki/%E8%AF%8D%E5%B9%B2%E6%8F%90%E5%8F%96
+#library(SnowballC)
+#確保任何形式的單字只會轉換成相同詞性出現一次
+#docs <- tm_map(docs, stemDocument)
+mixseg = worker()
+jieba_tokenizer=function(d){
+  unlist(segment(d[[1]],mixseg))
+}
+seg = lapply(docs, jieba_tokenizer)
+freqFrame = as.data.frame(table(unlist(seg)))
+
+
+```
+
+```{r}
+head(freqFrame)
+```
+```{r}
+wordcloud(freqFrame$Var1,freqFrame$Freq,
+          scale=c(5,0.1),min.freq=10,max.words=150,
+          random.order=TRUE, random.color=FALSE, 
+          rot.per=.1, colors=brewer.pal(8, "Dark2"),
+          ordered.colors=FALSE,use.r.layout=FALSE,
+          fixed.asp=TRUE)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
