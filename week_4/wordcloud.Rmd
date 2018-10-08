@@ -4,11 +4,12 @@ author: "gordon"
 date: "2018年10月4日"
 output: html_document
 ---
-
+##先用google爬有關"你的名字"的PTT文章
 ```{r }
 library(rvest)
 web1='https://www.google.com.tw/search?q='
-webname='%e7%8e%8b%e5%82%91%e8%b3%a2'
+webname="%E4%BD%A0%E7%9A%84%E5%90%8D%E5%AD%97"
+  #"2018%E5%A4%8F%E7%95%AAptt"
   #"%E9%AB%94%E8%82%B2%E7%94%9C"(體育甜)
   #'%e7%8e%8b%e5%82%91%e8%b3%a2'#要搜尋的(此處為:蔡爾成)
 #'%E6%88%91%E7%9A%84%E8%8B%B1%E9%9B%84%E5%AD%B8%E9%99%A2'(王傑賢)
@@ -53,18 +54,17 @@ for (i in 1:(long*10)){
   doc1=read_html(website[[i]])
   
   txt=html_text(doc1)
-  txt=strsplit(txt,'NTUcourse標題')#整理文章10篇
-  txtlist[i] <- txt[[1]][2]
-  txtlist[i] <- strsplit(txtlist[[i]],"\n")
+  #txt=strsplit(txt,'NTUcourse標題')#整理文章10篇
+  txtlist[i] <- txt
+  
 }
 
 ```
 
 
 
-## Including Plots
 
-You can also embed plots, for example:
+##將收集到的資料繪製成文字圖
 
 ```{r }
 
@@ -84,33 +84,30 @@ toSpace <- content_transformer(function(x, pattern) {
   return (gsub(pattern, " ", x))
 }
 )
+
+
 docs <- tm_map(docs, toSpace, "※")
-docs <- tm_map(docs, toSpace, "老師")
-docs <- tm_map(docs, toSpace, "推")
-docs <- tm_map(docs, toSpace, "◆")
-docs <- tm_map(docs, toSpace, "‧")
-docs <- tm_map(docs, toSpace, "的")
-docs <- tm_map(docs, toSpace, "我")
-docs <- tm_map(docs, toSpace, "是")
-docs <- tm_map(docs, toSpace, "會")
-docs <- tm_map(docs, toSpace, "同學")
+
+
 docs <- tm_map(docs, toSpace, "看板")
 docs <- tm_map(docs, toSpace, "作者")
 docs <- tm_map(docs, toSpace, "發信站")
 docs <- tm_map(docs, toSpace, "批踢踢實業坊")
 docs <- tm_map(docs, toSpace, "[a-zA-Z]")
-#移除標點符號 (punctuation)
-#移除數字 (digits)、空白 (white space)
+
+pop_list=c("作品",'視覺',"什麼","可以","這部","因為","所以","不過","其實","應該","如果","覺得","不是","沒有","這樣","還是","一樣","不會","只是","可能"
+,"時候","可能","知道","時候","最後","就是","真的")# 用迴圈過濾廢字
+for (i in 1:length(pop_list)){
+  docs <- tm_map(docs, toSpace, pop_list[i])
+}
+  #導演的名字,片名
+#docs <- tm_map(docs,removeWords,stopwordsCN())#移除常用廢字
 docs <- tm_map(docs, removePunctuation)
 docs <- tm_map(docs, removeNumbers)
 docs <- tm_map(docs, stripWhitespace)
-#語詞詞幹化 (stemmization)
-#以英文為例
-#https://zh.wikipedia.org/wiki/%E8%AF%8D%E5%B9%B2%E6%8F%90%E5%8F%96
-#library(SnowballC)
-#確保任何形式的單字只會轉換成相同詞性出現一次
-#docs <- tm_map(docs, stemDocument)
+
 mixseg = worker()
+new_user_word(mixseg, "新海誠","你的名字")
 jieba_tokenizer=function(d){
   unlist(segment(d[[1]],mixseg))
 }
@@ -121,11 +118,18 @@ freqFrame = as.data.frame(table(unlist(seg)))
 ```
 
 ```{r}
-head(freqFrame)
+frevar1=as.character(freqFrame$Var1)
+frevar=nchar(frevar1)>1
+freqFrame=freqFrame[frevar,]
+freqFrame=freqFrame[rev(order(freqFrame$Freq)),]
+#freqFrame
+library(ggplot2)
+ggplot(subset(freqFrame,Freq>121),aes(x=reorder(Var1,-Freq),y=Freq))+geom_bar(stat="identity")#依照詞頻率繪製柱狀圖
+
 ```
 ```{r}
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          scale=c(5,0.1),min.freq=10,max.words=150,
+          scale=c(4,0.1),min.freq=6,max.words=140,
           random.order=TRUE, random.color=FALSE, 
           rot.per=.1, colors=brewer.pal(8, "Dark2"),
           ordered.colors=FALSE,use.r.layout=FALSE,
