@@ -1,3 +1,11 @@
+---
+title: "map"
+author: "gordon"
+date: "2018年10月10日"
+output: html_document
+---
+#高雄市颱風時開放的臨時停車區域
+```{r }
 rm(list = ls(all=TRUE))
 library(leaflet)
 locate <- read.csv("1070919typhoonparking.csv")
@@ -11,3 +19,9 @@ map <- leaflet() %>%
   addTiles() %>%
   fitBounds("120","22","121","23")
 map
+```
+
+
+
+```
+
