@@ -6,18 +6,19 @@ output: html_document
 ---
 ##先用google爬有關"你的名字"的PTT文章
 ```{r }
+rm(list = ls(all=TRUE))
 library(rvest)
 web1='https://www.google.com.tw/search?q='
-webname="%E4%BD%A0%E7%9A%84%E5%90%8D%E5%AD%97"
-  #"2018%E5%A4%8F%E7%95%AAptt"
-  #"%E9%AB%94%E8%82%B2%E7%94%9C"(體育甜)
-  #'%e7%8e%8b%e5%82%91%e8%b3%a2'#要搜尋的(此處為:蔡爾成)
-#'%E6%88%91%E7%9A%84%E8%8B%B1%E9%9B%84%E5%AD%B8%E9%99%A2'(王傑賢)
+
+topic =curl_escape("2017秋番") # google 主題
+long=1 # google 頁數
+
+webname=topic
 web2='+ptt+site:www.ptt.cc&rlz=1C1GCEA_enTW762TW762&ei=njSjW5PDMIj08gWx8Je4DA&start='
 webnum=''
 webfinal='&sa=N&biw=1280&bih=653'
 website=c()
-long=3  # google 頁數
+long=long-1
 for(i in 0:long){
   webnum=as.character(i*10)
   web=paste(web1,webname,web2,webnum,webfinal,sep="")
@@ -50,7 +51,7 @@ head(website)#整理完畢
 
 ```{r}
 txtlist=list()
-for (i in 1:(long*10)){
+for (i in 1:((long*10)+10)){
   doc1=read_html(website[[i]])
   
   txt=html_text(doc1)
@@ -96,7 +97,7 @@ docs <- tm_map(docs, toSpace, "批踢踢實業坊")
 docs <- tm_map(docs, toSpace, "[a-zA-Z]")
 
 pop_list=c("作品",'視覺',"什麼","可以","這部","因為","所以","不過","其實","應該","如果","覺得","不是","沒有","這樣","還是","一樣","不會","只是","可能"
-,"時候","可能","知道","時候","最後","就是","真的")# 用迴圈過濾廢字
+,"時候","可能","知道","時候","最後","就是","真的","動畫","影片","制作","監督","原作","構成","系列")# 用迴圈過濾廢字
 for (i in 1:length(pop_list)){
   docs <- tm_map(docs, toSpace, pop_list[i])
 }
@@ -122,14 +123,14 @@ frevar1=as.character(freqFrame$Var1)
 frevar=nchar(frevar1)>1
 freqFrame=freqFrame[frevar,]
 freqFrame=freqFrame[rev(order(freqFrame$Freq)),]
-#freqFrame
-library(ggplot2)
-ggplot(subset(freqFrame,Freq>121),aes(x=reorder(Var1,-Freq),y=Freq))+geom_bar(stat="identity")#依照詞頻率繪製柱狀圖
+freqFrame
+#library(ggplot2)
+#ggplot(subset(freqFrame,Freq>50),aes(x=reorder(Var1,-Freq),y=Freq))+geom_bar(stat="identity")#依照詞頻率繪製柱狀圖
 
 ```
 ```{r}
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          scale=c(4,0.1),min.freq=6,max.words=140,
+          scale=c(4,0.1),min.freq=4,max.words=140,
           random.order=TRUE, random.color=FALSE, 
           rot.per=.1, colors=brewer.pal(8, "Dark2"),
           ordered.colors=FALSE,use.r.layout=FALSE,
