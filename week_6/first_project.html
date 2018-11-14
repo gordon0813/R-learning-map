@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>tf-idf </title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>first_project</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -15123,12 +15123,21 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="&#31639;&#27861;&#35611;&#35299;:&#28858;&#20102;&#24471;&#20986;&#20841;&#23478;&#36092;&#29289;&#32178;&#31449;&#30340;&#35413;&#20729;&#24046;&#21029;&#65292;&#22240;&#27492;&#20351;&#29992;&#26377;&#21029;&#26044;Kmeans+PLA,&#38750;&#30435;&#30563;&#31639;&#27861;&#30340;&#26041;&#27861;">&#31639;&#27861;&#35611;&#35299;:&#28858;&#20102;&#24471;&#20986;&#20841;&#23478;&#36092;&#29289;&#32178;&#31449;&#30340;&#35413;&#20729;&#24046;&#21029;&#65292;&#22240;&#27492;&#20351;&#29992;&#26377;&#21029;&#26044;Kmeans+PLA,&#38750;&#30435;&#30563;&#31639;&#27861;&#30340;&#26041;&#27861;<a class="anchor-link" href="#&#31639;&#27861;&#35611;&#35299;:&#28858;&#20102;&#24471;&#20986;&#20841;&#23478;&#36092;&#29289;&#32178;&#31449;&#30340;&#35413;&#20729;&#24046;&#21029;&#65292;&#22240;&#27492;&#20351;&#29992;&#26377;&#21029;&#26044;Kmeans+PLA,&#38750;&#30435;&#30563;&#31639;&#27861;&#30340;&#26041;&#27861;">&#182;</a></h3>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[253]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">twomat_oneword</span><span class="p">:</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#輸入為兩個矩陣，分別代表兩家的文章</span>
+<span class="k">class</span> <span class="nc">twomat_oneword</span><span class="p">:</span>                    
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">m1</span><span class="p">,</span><span class="n">m2</span><span class="p">,</span><span class="n">word</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">m1</span><span class="o">=</span><span class="n">m1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">m2</span><span class="o">=</span><span class="n">m2</span>
@@ -15141,11 +15150,11 @@ div#notebook {
         <span class="k">return</span> <span class="n">m1</span>
     <span class="k">def</span> <span class="nf">special_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">re</span><span class="o">=</span><span class="s2">&quot;wmat&quot;</span><span class="p">):</span>
         
-        <span class="n">P</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">avgm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m1</span><span class="p">)</span>
+        <span class="n">P</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">avgm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m1</span><span class="p">)</span>                   <span class="c1">#將詞頻矩陣每列標準化(使每篇文章造成的貢獻相同</span>
         <span class="n">N</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">avgm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m2</span><span class="p">)</span>
-        <span class="n">P1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">P</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">P1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">P</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>                         <span class="c1">#分別將兩個矩陣壓成一維在標準化一次(避免兩矩陣文章數不同，詞的量值不對稱</span>
         <span class="n">P2</span><span class="o">=</span><span class="n">P1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">P1</span><span class="p">)</span>
-        <span class="n">N1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">N1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>                         <span class="c1">#將兩矩陣相減得一數列，此數列代表對應的詞是偏向哪家網站</span>
         <span class="n">N2</span><span class="o">=</span><span class="n">N1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">N1</span><span class="p">)</span>
         <span class="n">jg</span><span class="o">=</span><span class="n">P2</span><span class="o">-</span><span class="n">N2</span>
         <span class="k">if</span><span class="p">(</span><span class="n">re</span><span class="o">==</span><span class="s2">&quot;nmat&quot;</span><span class="p">):</span>
