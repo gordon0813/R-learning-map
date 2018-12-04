@@ -1,5 +1,6 @@
 # R-learning-map
-#完成HW1
+#完成HW
 
-#建立github資料夾
-#https://gordon0813.github.io/R-learning-map/week_4/wordcloud.html
+#嘗試使用Hanlp進行斷詞，句構分析
+
+#https://gordon0813.github.io/R-learning-map/week_12/hanlp.html
