@@ -1,7 +1,7 @@
 # R-learning-map
 
 
-# 有關資科學的學習歷程
+# 有關資料科學的學習歷程
 ### 雖然叫R learning map 不過後期都是用python 寫的
 # 比較有趣的成果
 ## https://gordon0813.github.io/R-learning-map/week_4/wordcloud.html (文字雲)
